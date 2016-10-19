@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/09/12/2016 Asia Hong Kong Online Preliminary/D_Classrooms/index.html">
 <meta property="og:site_name" content="WwTT0T's blog">
 <meta property="og:description" content="2016 Asia Hong Kong Online Preliminary - Problem D">
-<meta property="og:updated_time" content="2016-09-12T07:44:00.393Z">
+<meta property="og:updated_time" content="2016-10-19T14:02:00.096Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2016 Asia Hong Kong Online Preliminary (2016亚洲区域赛香港站网络赛) - Problem D - Classroom">
 <meta name="twitter:description" content="2016 Asia Hong Kong Online Preliminary - Problem D">
@@ -112,7 +112,7 @@
 <p>范围：<code>1 &lt;= N &lt;= 200000 &amp;&amp;  1 &lt;= K &lt;= 200000 &amp;&amp; 1 &lt;= Si，Fi &lt;= 1e9</code><br><a id="more"></a></p>
 <h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><p>首先，对于如果只有一个教室的情况<strong><em>贪心</em></strong> 的选取结束时间靠后的活动安排，因为结束的越早，就能安排越多的活动，对于结束时间相同的活动，优先安排开始时间靠前的活动（这个可以自己思考下）。<br>但是现在是多个教室的问题，对于活动的选择，还是按照一个教室的情况，但是对于教室的选择，还需要一次贪心，我一开始的想法是用优先队列存 <code>每个教室的活动结束时间</code> 队头为最早结束的教室，然后判断这个活动，有没有教室能举办，也就是 <code>Priority-queue.top() &lt; ? Fi</code>，如果满足 <code>&lt;</code> 直接pop(),再push(), 不满足的话，看有没有空教室，表现为 <code>PQ.size() &lt; ? k</code> ,有也可以直接push，但是一直 <strong>WA</strong> ，WA了 7次 TAT ,后来队友找到一个错误点，如 <code>{4,2} { (1 , 5);(1 , 6);(7 ，11);(6 , 12) }</code> 算出来是3， 但是答案应该是4， 分析了一下才知道是贪心错了， 应该是 <code>当这个活动有教室能举办时，找能举办的,最晚结束的教室</code> (这个找的过程，用二分)，这个时候就知道要改用mutliset了 （虽然一开始用set又 WA了一发） ,时间复杂度为 <code>O(NlogN)</code> .</p>
 </blockquote>
-<h3 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">#include &lt;cstdio&gt;</div><div class="line">#include &lt;cstring&gt;</div><div class="line">#include &lt;vector&gt;</div><div class="line">#include &lt;set&gt;</div><div class="line">#include &lt;map&gt;</div><div class="line">#include &lt;string&gt;</div><div class="line">#include &lt;cmath&gt;</div><div class="line">#include &lt;cstdlib&gt;</div><div class="line">#include &lt;algorithm&gt;</div><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;queue&gt;</div><div class="line">#include &lt;stack&gt;</div><div class="line">#include &lt;sstream&gt;</div><div class="line">using namespace std;</div><div class="line"></div><div class="line">#define PQ priority_queue</div><div class="line">#define P pair&lt;int,int&gt;</div><div class="line">#define CLA(array) memset(array,0,sizeof array)</div><div class="line">#define CLINF(array) memset(array,0x3f,sizeof array)</div><div class="line">#define CLF(array) memset(array,-1,sizeof array)</div><div class="line">#define DB(a) cout &lt;&lt; "DEBUG " &lt;&lt; a &lt;&lt; endl;</div><div class="line">typedef long long LL;</div><div class="line">typedef unsigned long long ULL;</div><div class="line">const int MAXN = 100000 + 50;</div><div class="line">const int INF = 1 &lt;&lt; 30;</div><div class="line">int n,k,ans;</div><div class="line"></div><div class="line">struct ac&#123;</div><div class="line">	int s,e;</div><div class="line">	bool operator &lt; (const ac&amp; a) const&#123;</div><div class="line">		if(e == a.e) return s &lt; a.s;</div><div class="line">		return e &lt; a.e;</div><div class="line">	&#125;</div><div class="line">&#125;c[MAXN &lt;&lt; 2];</div><div class="line"></div><div class="line">int main()&#123;</div><div class="line">    //ios_base::sync_with_stdio(false);</div><div class="line">	while(~scanf("%d%d",&amp;n,&amp;k))&#123;</div><div class="line">		ans = 0;</div><div class="line">		for(int i = 0;i &lt; n; ++i)&#123;</div><div class="line">			scanf("%d%d",&amp;c[i].s,&amp;c[i].e);</div><div class="line">		&#125;</div><div class="line">		sort(c,c + n);</div><div class="line">		multiset&lt;int&gt; s;</div><div class="line">		for(int i = 0;i &lt; n; ++i)&#123;</div><div class="line">			//cout &lt;&lt; s.size() &lt;&lt; endl;</div><div class="line">			if(s.empty())&#123;</div><div class="line">				s.insert(c[i].e);</div><div class="line">				ans++;</div><div class="line">			&#125;</div><div class="line">			else if(*(s.begin()) &gt;= c[i].s)&#123;</div><div class="line">				if(s.size() &lt; k)&#123;</div><div class="line">					s.insert(c[i].e);</div><div class="line">					ans++;</div><div class="line">				&#125;</div><div class="line">				else continue;</div><div class="line">			&#125;</div><div class="line">			else&#123;</div><div class="line">				multiset&lt;int&gt;::iterator it = s.lower_bound(c[i].s);</div><div class="line">				it--;</div><div class="line">				s.erase(it);</div><div class="line">				s.insert(c[i].e);</div><div class="line">				ans++;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		printf("%d\n",ans);</div><div class="line">    	s.clear();</div><div class="line">    &#125;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stack&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sstream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line">#define PQ priority_queue</div><div class="line">#define P pair&lt;int,int&gt;</div><div class="line">#define CLA(array) memset(array,0,sizeof array)</div><div class="line">#define CLINF(array) memset(array,0x3f,sizeof array)</div><div class="line">#define CLF(array) memset(array,-1,sizeof array)</div><div class="line">#define DB(a) cout &lt;&lt; "DEBUG " &lt;&lt; a &lt;&lt; endl;</div><div class="line">*/</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> LL;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> ULL;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXN = <span class="number">100000</span> + <span class="number">50</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</div><div class="line"><span class="keyword">int</span> n,k,ans;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> ac&#123;</div><div class="line">	<span class="keyword">int</span> s,e;</div><div class="line">	<span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> ac&amp; a) <span class="keyword">const</span>&#123;</div><div class="line">		<span class="keyword">if</span>(e == a.e) <span class="keyword">return</span> s &lt; a.s;</div><div class="line">		<span class="keyword">return</span> e &lt; a.e;</div><div class="line">	&#125;</div><div class="line">&#125;c[MAXN &lt;&lt; <span class="number">2</span>];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="comment">//ios_base::sync_with_stdio(false);</span></div><div class="line">	<span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;k))&#123;</div><div class="line">		ans = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n; ++i)&#123;</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;c[i].s,&amp;c[i].e);</div><div class="line">		&#125;</div><div class="line">		sort(c,c + n);</div><div class="line">		<span class="built_in">multiset</span>&lt;<span class="keyword">int</span>&gt; s;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n; ++i)&#123;</div><div class="line">			<span class="comment">//cout &lt;&lt; s.size() &lt;&lt; endl;</span></div><div class="line">			<span class="keyword">if</span>(s.empty())&#123;</div><div class="line">				s.insert(c[i].e);</div><div class="line">				ans++;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span> <span class="keyword">if</span>(*(s.begin()) &gt;= c[i].s)&#123;</div><div class="line">				<span class="keyword">if</span>(s.size() &lt; k)&#123;</div><div class="line">					s.insert(c[i].e);</div><div class="line">					ans++;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span> <span class="keyword">continue</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span>&#123;</div><div class="line">				<span class="built_in">multiset</span>&lt;<span class="keyword">int</span>&gt;::iterator it = s.lower_bound(c[i].s);</div><div class="line">				it--;</div><div class="line">				s.erase(it);</div><div class="line">				s.insert(c[i].e);</div><div class="line">				ans++;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d\n"</span>,ans);</div><div class="line">    	s.clear();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -126,7 +126,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Kattis/">Kattis</a><a href="/tags/贪心/">贪心</a><a href="/tags/二分/">二分</a>
+  <span></span> <a href="/tags/贪心/">贪心</a><a href="/tags/二分/">二分</a><a href="/tags/Kattis/">Kattis</a>
   </div>
 
 </div>
@@ -218,31 +218,11 @@
 			
 		
 			
-				<li><a href="/tags/Disjoint-Set/" title="Disjoint Set">Disjoint Set<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/贪心/" title="贪心">贪心<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/二分/" title="二分">二分<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Water/" title="Water">Water<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/DFS/" title="DFS">DFS<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/挑战程序设计竞赛/" title="挑战程序设计竞赛">挑战程序设计竞赛<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Data-Structures/" title="Data Structures">Data Structures<sup>1</sup></a></li>
+				<li><a href="/tags/贪心/" title="贪心">贪心<sup>1</sup></a></li>
 			
 		
 			
@@ -254,7 +234,27 @@
 			
 		
 			
+				<li><a href="/tags/二分/" title="二分">二分<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/test/" title="test">test<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Water/" title="Water">Water<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Disjoint-Set/" title="Disjoint Set">Disjoint Set<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/挑战程序设计竞赛/" title="挑战程序设计竞赛">挑战程序设计竞赛<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Data-Structures/" title="Data Structures">Data Structures<sup>1</sup></a></li>
 			
 		
 		</ul>
