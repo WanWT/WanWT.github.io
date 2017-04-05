@@ -1,0 +1,573 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>《挑战程序设计竞赛》2.4.4 并查集 习题 - Marked Ancestor Aizu2170 AOJ2170 | WwTT0T&#39;s blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="WwTT0T">
+    
+
+    
+    <meta name="description" content="挑战程序设计竞赛 并查集 习题 Marked Ancestor Aizu2170 AOJ2170">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《挑战程序设计竞赛》2.4.4 并查集 习题 - Marked Ancestor Aizu2170 AOJ2170">
+<meta property="og:url" content="http://yoursite.com/2016/10/19/并查集 Disjoint Set/aoj2170/index.html">
+<meta property="og:site_name" content="WwTT0T's blog">
+<meta property="og:description" content="挑战程序设计竞赛 并查集 习题 Marked Ancestor Aizu2170 AOJ2170">
+<meta property="og:updated_time" content="2016-10-19T14:17:15.427Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《挑战程序设计竞赛》2.4.4 并查集 习题 - Marked Ancestor Aizu2170 AOJ2170">
+<meta name="twitter:description" content="挑战程序设计竞赛 并查集 习题 Marked Ancestor Aizu2170 AOJ2170">
+
+    
+    <link rel="alternative" href="/atom.xml" title="WwTT0T&#39;s blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/IMG_0482.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/applelogo.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/applelogo.png">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/IMG_0482.JPG" alt="WwTT0T&#39;s blog" title="WwTT0T&#39;s blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="WwTT0T&#39;s blog">WwTT0T&#39;s blog</a></h1>
+				<h2 class="blog-motto">To be add.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/categories">Categories</a></li>
+					
+						<li><a href="/tags">Tags</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/10/19/并查集 Disjoint Set/aoj2170/" title="《挑战程序设计竞赛》2.4.4 并查集 习题 - Marked Ancestor Aizu2170 AOJ2170" itemprop="url">《挑战程序设计竞赛》2.4.4 并查集 习题 - Marked Ancestor Aizu2170 AOJ2170</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="WwTT0T" target="_blank" itemprop="author">WwTT0T</a>
+		
+  <p class="article-time">
+    <time datetime="2016-10-19T13:30:00.000Z" itemprop="datePublished"> 发表于 2016-10-19</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#题意："><span class="toc-number">1.</span> <span class="toc-text">题意：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路："><span class="toc-number">2.</span> <span class="toc-text">思路：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码："><span class="toc-number">3.</span> <span class="toc-text">代码：</span></a></li></ol>
+		
+		</div>
+		
+		<blockquote>
+<p>Source：[ACM-ICPC Japan Alumni Group Summer Camp 2009 , Day 3, Tokyo, Japan, 2009-09-20 ]<br>Link: <a href="http://vjudge.net/problem/Aizu-2170" target="_blank" rel="external">http://vjudge.net/problem/Aizu-2170</a></p>
+</blockquote>
+<h3 id="题意："><a href="#题意：" class="headerlink" title="题意："></a>题意：</h3><blockquote>
+<p>给定一棵<code>n</code>个结点的树，一开始<code>1</code>(root)被标记，之后给出<code>q</code>个请求，请求有两种，一种是查询给定的结点<code>v</code>的最近标记祖先的编号，另一种是标记节点<code>v</code>，输出所有查询到的结点编号和<br>范围：1 &lt;= n &lt;= 1e5 , 1 &lt;= q &lt;= 1e5<br><a id="more"></a></p>
+</blockquote>
+<h3 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h3><blockquote>
+<p>并查集的变形，然而直接dfs暴力也可以过，8s跑了220ms。正解是反向过来处理，先记录下每个查询的时间和编号，再把每个点的最早标记时间记录下来，然后反过来dfs处理查询，dfs到的点如果标记时间比查询时间早，加入答案，如果晚，直接路径压缩，因为这个标记对时间在前面的查询没有影响了。</p>
+</blockquote>
+<h3 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;map&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stack&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sstream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cctype&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="comment">/*</span></div><div class="line">#define PQ priority_queue</div><div class="line">#define P pair&lt;int,int&gt;</div><div class="line">#define CLA(array) memset(array,0,sizeof array)</div><div class="line">#define CLINF(array) memset(array,0x3f,sizeof array)</div><div class="line">#define CLF(array) memset(array,-1,sizeof array)</div><div class="line">#define DB(a) cout &lt;&lt; "DEBUG " &lt;&lt; a &lt;&lt; endl;</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> LL;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> ULL;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXN = <span class="number">100000</span> + <span class="number">50</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</div><div class="line"></div><div class="line"><span class="comment">//accept but wrong answer</span></div><div class="line"><span class="comment">/*</span></div><div class="line">int p[MAXN],sign[MAXN],n,q;</div><div class="line">LL ans;</div><div class="line"></div><div class="line">int main()&#123;</div><div class="line">    //ios_base::sync_with_stdio(false);</div><div class="line">#ifdef LOCAL</div><div class="line">//  freopen(".\in.txt", "r", stdin);</div><div class="line">//  freopen(".\out.txt","w",stdout);</div><div class="line">#endif</div><div class="line">	while(~scanf("%d%d",&amp;n,&amp;q) &amp;&amp; (n &amp;&amp; q)) &#123;</div><div class="line">		CLA(sign); </div><div class="line">		sign[1] = 1;</div><div class="line">		ans = 0;</div><div class="line">		for(int i = 2;i &lt;= n; ++i) scanf("%d",p + i);</div><div class="line">		while(q--) &#123;</div><div class="line">			char op[2]; int no;</div><div class="line">			scanf("%s%d",op,&amp;no);</div><div class="line">			if(op[0] == 'Q') &#123;</div><div class="line">				int nxt = no;</div><div class="line">				while(!sign[nxt]) &#123;</div><div class="line">					nxt = p[nxt];</div><div class="line">				&#125;</div><div class="line">				ans += nxt;</div><div class="line">				//printf("%d\n",nxt);</div><div class="line">			&#125;</div><div class="line">			else sign[no] = 1;</div><div class="line">		&#125;</div><div class="line">		printf("%lld\n",ans);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="comment">//answer</span></div><div class="line"><span class="keyword">int</span> mark[MAXN],q[MAXN][<span class="number">2</span>],f[MAXN],n,qq,nq;</div><div class="line">LL ans;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> t)</span> </span>&#123;</div><div class="line">	<span class="comment">//printf("%d %d\n",mark[x],f[x]);</span></div><div class="line">	<span class="keyword">if</span>(mark[x] &lt; t) <span class="keyword">return</span>  x;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">return</span> f[x] = find(f[x],t);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;qq) &amp;&amp; (n &amp;&amp; qq) ) &#123;</div><div class="line">		CLINF(mark);</div><div class="line">		mark[<span class="number">1</span>] = -INF;</div><div class="line">		ans = nq = <span class="number">0</span>;</div><div class="line">		f[<span class="number">1</span>] = <span class="number">1</span>;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">2</span>;i &lt;= n;++i)&#123;</div><div class="line">			<span class="built_in">scanf</span>(<span class="string">"%d"</span>, f + i);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; qq; ++i) &#123;</div><div class="line">			<span class="keyword">char</span> op[<span class="number">2</span>];<span class="keyword">int</span> no; <span class="built_in">scanf</span>(<span class="string">"%s%d"</span>,op,&amp;no);</div><div class="line">			<span class="keyword">if</span>(op[<span class="number">0</span>] == <span class="string">'M'</span>) &#123;</div><div class="line">				mark[no] = min(mark[no],i);</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span> &#123;</div><div class="line">				q[nq][<span class="number">0</span>] = no;</div><div class="line">				q[nq][<span class="number">1</span>] = i;</div><div class="line">				++nq;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = nq - <span class="number">1</span>;i &gt;= <span class="number">0</span>; --i) &#123;</div><div class="line">			<span class="comment">//DB(nq);</span></div><div class="line">			ans += find(q[i][<span class="number">0</span>],q[i][<span class="number">1</span>]);</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%lld\n"</span>,ans);</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/挑战程序设计竞赛/">挑战程序设计竞赛</a>►<a class="article-category-link" href="/categories/挑战程序设计竞赛/Disjoint-Set/">Disjoint Set</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Disjoint-Set/">Disjoint Set</a><a href="/tags/挑战程序设计竞赛/">挑战程序设计竞赛</a><a href="/tags/Data-Structures/">Data Structures</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2016/10/19/并查集 Disjoint Set/aoj2170/" data-title="《挑战程序设计竞赛》2.4.4 并查集 习题 - Marked Ancestor Aizu2170 AOJ2170 | WwTT0T&#39;s blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/04/05/最短路 shortest path/hdu4725/" title="HDU 4725 - The Shortest Path in Nya Graph">
+  <strong>上一篇：</strong><br/>
+  <span>
+  HDU 4725 - The Shortest Path in Nya Graph</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/12/2016 Asia Hong Kong Online Preliminary/J_0-1 Sequences/"  title="2016 Asia Hong Kong Online Preliminary (2016亚洲区域赛香港站网络赛) - Problem J - 0-1 Sequences">
+ <strong>下一篇：</strong><br/> 
+ <span>2016 Asia Hong Kong Online Preliminary (2016亚洲区域赛香港站网络赛) - Problem J - 0-1 Sequences
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/10/19/并查集 Disjoint Set/aoj2170/" data-title="《挑战程序设计竞赛》2.4.4 并查集 习题 - Marked Ancestor Aizu2170 AOJ2170" data-url="http://yoursite.com/2016/10/19/并查集 Disjoint Set/aoj2170/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#题意："><span class="toc-number">1.</span> <span class="toc-text">题意：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路："><span class="toc-number">2.</span> <span class="toc-text">思路：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码："><span class="toc-number">3.</span> <span class="toc-text">代码：</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/2016-Asia-Hong-Kong-Online-Preliminary/" title="2016 Asia Hong Kong Online Preliminary">2016 Asia Hong Kong Online Preliminary<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/挑战程序设计竞赛/Disjoint-Set/" title="Disjoint Set">Disjoint Set<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/graph-theory/" title="graph theory">graph theory<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/graph-theory/shortest-path/" title="shortest path">shortest path<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/挑战程序设计竞赛/" title="挑战程序设计竞赛">挑战程序设计竞赛<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Kattis/" title="Kattis">Kattis<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Disjoint-Set/" title="Disjoint Set">Disjoint Set<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数学/" title="数学">数学<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/推理/" title="推理">推理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/贪心/" title="贪心">贪心<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/二分/" title="二分">二分<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/test/" title="test">test<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/DFS/" title="DFS">DFS<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/挑战程序设计竞赛/" title="挑战程序设计竞赛">挑战程序设计竞赛<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Data-Structures/" title="Data Structures">Data Structures<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Water/" title="Water">Water<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/shortest-path/" title="shortest path">shortest path<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hdu/" title="Hdu">Hdu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/graph-theory/" title="graph theory">graph theory<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+    </ul>
+</div>
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> A little acmer~ <br/>
+			Waiting for my GF XD.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/WanWT" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="http://www.zhihu.com/people/wan-wen-tao-66" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+		<a href="mailto:b6y22@qq.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
+		
+		<a href="/about" target="_blank" title="WwTT0T">WwTT0T</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wwtt0t"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
